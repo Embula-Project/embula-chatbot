@@ -6,8 +6,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Get the database URL from environment variable, default to SQLite if not set
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./embula.db")
+# Construct Database URL from .env vars if DATABASE_URL is not explicitly set
+if not os.getenv("DATABASE_URL"):
+    DB_USER = os.getenv("DB_USER", "root")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+    DB_HOST = os.getenv("DB_HOST", "localhost")
+    DB_PORT = os.getenv("DB_PORT", "3306")
+    DB_NAME = os.getenv("DB_NAME", "Embula")
+    
+    # Check if we are using MySQL (implied by presence of DB_USER/DB_HOST)
+    if DB_HOST and DB_NAME:
+        SQLALCHEMY_DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    else:
+        SQLALCHEMY_DATABASE_URL = "sqlite:///./embula.db"
+else:
+    SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 
 # SQLite specific arguments
 connect_args = {}

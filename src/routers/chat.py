@@ -10,9 +10,18 @@ async def chat(request: ChatRequest):
     try:
         response = chat_service.process_chat(request.sessionId, request.message)
         if response.get("error"):
-            return ChatResponse(reply=response["reply"], error=True)
+            return ChatResponse(
+                response_text=response["response_text"], 
+                error=True
+            )
         
-        return ChatResponse(reply=response["reply"], usage=response.get("usage"))
+        return ChatResponse(
+            response_text=response["response_text"],
+            tables_available=response.get("tables_available", []),
+            menu_suggestions=response.get("menu_suggestions", []),
+            navigation_suggestion=response.get("navigation_suggestion"),
+            usage=response.get("usage")
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
