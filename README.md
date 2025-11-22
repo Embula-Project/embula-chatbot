@@ -1,13 +1,29 @@
 # Embula Restaurant Chatbot Backend (Python FastAPI)
 
-This is the Python FastAPI version of the Embula Restaurant Chatbot backend, powered by Mistral AI.
+This is the **Python FastAPI** version of the **Embula Restaurant Chatbot backend**, powered by **Mistral AI**. It handles:
+
+- Menu queries (filter by vegan/vegetarian/non-veg)  
+- Table availability & reservations  
+- Restaurant info (location, contact, opening hours)  
+- Safe SQL access (restricted tables are blocked)  
+- Frontend integration ready
+
+---
 
 ## Features
-- **FastAPI**: High-performance, easy-to-learn, fast-to-code, ready-for-production web framework.
-- **Mistral AI Integration**: Uses `mistral-small-latest` for intelligent responses.
-- **Context Aware**: Maintains conversation history per session (in-memory).
-- **System Personality**: Configured to be a friendly restaurant assistant.
-- **Profanity Filter**: Blocks inappropriate language using `better-profanity`.
+
+- **FastAPI**: High-performance, easy-to-learn, production-ready framework  
+- **Mistral AI Integration**: Uses `mistral-small-latest` for intelligent natural language understanding  
+- **Context Awareness**: Maintains conversation history per session (in-memory)  
+- **System Personality**: Friendly restaurant assistant  
+- **Profanity & SQL Injection Filter**: Sanitizes user input using `better-profanity` and a custom sanitizer  
+- **Database-Safe Queries**: Only reads from allowed tables: `food_item`, `food_item_ingredients`, `reservations`, `restaurant_tables`, `discounts`  
+- **Frontend Integration Ready**: API endpoints can be called via JS, React, Next.js, or any frontend
+
+---
+
+## Project Structure
+
 
 ## Project Structure
 ```
@@ -26,7 +42,12 @@ embula-chatbot-python/
 
 ## Setup Instructions
 
-1.  **Prerequisites**: Python 3.9+ installed.
+ 1.**Prerequisites**
+
+- Python 3.9+  
+- MySQL 8+ (if using a real database)  
+- Mistral AI API Key  
+- `pip` package manager  
 2.  **Create Virtual Environment** (Recommended):
     ```bash
     python -m venv venv
@@ -50,35 +71,3 @@ embula-chatbot-python/
     # OR using uvicorn directly
     uvicorn src.main:app --reload
     ```
-
-## API Endpoints
-
-### 1. Chat with Bot
-**POST** `/api/chat`
-
-**Body:**
-```json
-{
-  "message": "What is on the menu?",
-  "sessionId": "user-123"
-}
-```
-
-**Response:**
-```json
-{
-  "reply": "We offer a variety of dishes including...",
-  "usage": { ... }
-}
-```
-
-### 2. Clear History
-**DELETE** `/api/chat/history/{session_id}`
-
-## Deployment (Render / Railway / Vercel)
-
-1.  **Push to GitHub**.
-2.  **Link to Provider**.
-3.  **Environment Variables**: Add `MISTRAL_API_KEY`.
-4.  **Build Command**: `pip install -r requirements.txt`.
-5.  **Start Command**: `uvicorn src.main:app --host 0.0.0.0 --port $PORT`.
